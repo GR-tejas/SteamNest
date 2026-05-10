@@ -1,0 +1,37 @@
+# =========================
+# Android Studio
+# =========================
+
+.gradle/
+local.properties
+.idea/
+build/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Android APKs
+*.apk
+*.aab
+
+# =========================
+# Visual Studio / .NET
+# =========================
+
+.vs/
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+
+# Publish folders
+publish/
+
+# =========================
+# OS Files
+# =========================
+
+Thumbs.db
+.DS_Store
