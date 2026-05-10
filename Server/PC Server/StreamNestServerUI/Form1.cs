@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Diagnostics;
 
 using System.ComponentModel;
+using System.IO;
 
 namespace FileShareAndStreamServer__Windows_
 {
@@ -88,38 +89,67 @@ namespace FileShareAndStreamServer__Windows_
 
             string serverPath = Path.Combine(Application.StartupPath, "StreamNestServer.exe");
 
-            serverProcess = new Process();
+            try
+            {
+                if (!File.Exists(serverPath))
+                {
+                    MessageBox.Show(
+                        "StreamNestServer.exe was not found.\n\nMake sure both EXE files are in the same folder.",
+                        "Server Not Found",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
 
-            serverProcess.StartInfo.FileName = serverPath;
+                    return;
+                }
 
-            serverProcess.StartInfo.Arguments = $"{portNumber} \"{folderPathLabel.Text}\"";
+                serverProcess =
+                    new Process();
 
-            serverProcess.Start();
+                serverProcess.StartInfo.FileName =
+                    serverPath;
 
-            submitButton.Enabled = false;
+                serverProcess.StartInfo.Arguments =
+                    $"{portNumber} \"{folderPathLabel.Text}\"";
 
-            stopButton.Enabled = true;
+                serverProcess.Start();
 
-            serverStatusLabel.Text = "Server Running";
+                submitButton.Enabled = false;
 
-            serverStatusLabel.ForeColor = Color.Green;
+                stopButton.Enabled = true;
 
-            portTextBox.ReadOnly = true;
+                serverStatusLabel.Text =
+                    "Server Running";
 
-            string ipAddress = GetLocalIpAddress();
+                serverStatusLabel.ForeColor =
+                    Color.Green;
 
-            ipLabel.Text = $"IP Address: {ipAddress}";
+                portTextBox.ReadOnly = true;
 
-            portLabel.Text = $"Port: {portNumber}";
+                string ipAddress = GetLocalIpAddress();
 
-            ServerConfig.SharedFolderPath = folderPathLabel.Text;
+                ipLabel.Text = $"IP Address: {ipAddress}";
 
-            MessageBox.Show(
-                $"Server Running\n\n" +
-                $"IP Address: {ipAddress}\n" +
-                $"Port: {portNumber}\n" +
-                $"Folder: {folderPathLabel.Text}"
-            );
+                portLabel.Text = $"Port: {portNumber}";
+
+                ServerConfig.SharedFolderPath = folderPathLabel.Text;
+
+                MessageBox.Show(
+                    $"Server Running\n\n" +
+                    $"IP Address: {ipAddress}\n" +
+                    $"Port: {portNumber}\n" +
+                    $"Folder: {folderPathLabel.Text}"
+                );
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    ex.Message,
+                    "Failed To Start Server",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
         }
 
         private void browseButton_Click(object sender, EventArgs e)
