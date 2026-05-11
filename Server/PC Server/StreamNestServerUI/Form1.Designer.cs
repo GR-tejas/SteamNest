@@ -40,6 +40,7 @@
             serverStatusLabel = new Label();
             ipLabel = new Label();
             portLabel = new Label();
+            shareButton = new Button();
             SuspendLayout();
             // 
             // submitButton
@@ -152,11 +153,22 @@
             portLabel.TabIndex = 13;
             portLabel.Text = "Port: ";
             // 
+            // shareButton
+            // 
+            shareButton.Location = new Point(560, 97);
+            shareButton.Name = "shareButton";
+            shareButton.Size = new Size(75, 23);
+            shareButton.TabIndex = 14;
+            shareButton.Text = "Share";
+            shareButton.UseVisualStyleBackColor = true;
+            shareButton.Click += shareButton_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(shareButton);
             Controls.Add(portLabel);
             Controls.Add(ipLabel);
             Controls.Add(serverStatusLabel);
@@ -189,5 +201,6 @@
         private Label serverStatusLabel;
         private Label ipLabel;
         private Label portLabel;
+        private Button shareButton;
     }
 }

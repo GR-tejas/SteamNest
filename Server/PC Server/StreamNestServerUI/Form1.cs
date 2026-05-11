@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Diagnostics;
 
 using System.ComponentModel;
+using System.Windows.Forms;
 using System.IO;
 
 namespace FileShareAndStreamServer__Windows_
@@ -26,11 +27,13 @@ namespace FileShareAndStreamServer__Windows_
             return LicenseManager.UsageMode == LicenseUsageMode.Designtime;
         }
 
-        private void Form1_Load( object sender, EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
             submitButton.Enabled = true;
 
             stopButton.Enabled = false;
+
+            shareButton.Enabled = false;
         }
 
         private string GetLocalIpAddress()
@@ -56,7 +59,7 @@ namespace FileShareAndStreamServer__Windows_
             }
         }
 
-        private void submitButton_Click(object sender,EventArgs e)
+        private void submitButton_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(portTextBox.Text))
             {
@@ -117,6 +120,8 @@ namespace FileShareAndStreamServer__Windows_
                 submitButton.Enabled = false;
 
                 stopButton.Enabled = true;
+
+                shareButton.Enabled = true;
 
                 serverStatusLabel.Text =
                     "Server Running";
@@ -184,7 +189,37 @@ namespace FileShareAndStreamServer__Windows_
                 ipLabel.Text = "IP Address: ";
 
                 portLabel.Text = "Port: ";
+
+                shareButton.Enabled = false;
             }
+        }
+
+        private void shareButton_Click(object sender, EventArgs e)
+        {
+            string ipText =
+                ipLabel.Text.Replace(
+                    "IP Address: ",
+                    ""
+                );
+
+            string portText =
+                portLabel.Text.Replace(
+                    "Port: ",
+                    ""
+                );
+
+            string shareText =
+                $"IP Address: {ipText}\n" +
+                $"Port: {portText}";
+
+            Clipboard.SetText(shareText);
+
+            MessageBox.Show(
+                "Server address copied to clipboard.",
+                "Copied",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information
+            );
         }
     }
 }
