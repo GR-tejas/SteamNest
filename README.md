@@ -93,7 +93,23 @@ Lower-numbered ports are commonly reserved by Windows, system services, or other
 
 ## If using StreamNestServerUI
 
-The IP address is shown automatically in the UI.
+The IP address and port number are shown automatically in the UI.
+
+You can also use the **Share** button to copy:
+
+```text
+IP ADDRESS: *Address*
+PORT: *Port*
+```
+
+directly to the Windows clipboard for easier sharing with other devices.
+
+Example:
+
+```text
+IP ADDRESS: 192.168.1.1
+PORT: 5000
+```
 
 ## If using CMD method
 
@@ -103,7 +119,7 @@ Run:
 ipconfig
 ```
 
-Then use the IPv4 Address shown in CMD.
+Then use the IPv4 Address shown in CMD together with the same port number used when starting the server.
 
 ---
 
