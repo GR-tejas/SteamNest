@@ -838,6 +838,8 @@ class LocalViewer : ComponentActivity()
                                             currentPath = ""
 
                                             isServerConfigured = true
+
+                                            hasFinishedStartup = true
                                         },
 
                                     onFailure =

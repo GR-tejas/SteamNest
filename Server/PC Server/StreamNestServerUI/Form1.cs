@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.IO;
+using System.Reflection.Emit;
 
 namespace FileShareAndStreamServer__Windows_
 {
@@ -15,25 +16,25 @@ namespace FileShareAndStreamServer__Windows_
         public Form1()
         {
             InitializeComponent();
-
-            if (IsInDesignMode())
-            {
-                return;
-            }
-        }
-
-        private bool IsInDesignMode()
-        {
-            return LicenseManager.UsageMode == LicenseUsageMode.Designtime;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            portTextBox.Enabled = true;
+
+            browseButton.Enabled = true;
+
             submitButton.Enabled = true;
 
             stopButton.Enabled = false;
 
             shareButton.Enabled = false;
+
+            serverStatusLabel.Text =
+                    "Server Stopped";
+
+            serverStatusLabel.ForeColor =
+                Color.Red;
         }
 
         private string GetLocalIpAddress()
@@ -115,6 +116,11 @@ namespace FileShareAndStreamServer__Windows_
                 serverProcess.StartInfo.Arguments =
                     $"{portNumber} \"{folderPathLabel.Text}\"";
 
+                serverProcess.EnableRaisingEvents = true;
+
+                serverProcess.Exited +=
+                    ServerProcess_Exited;
+
                 serverProcess.Start();
 
                 submitButton.Enabled = false;
@@ -122,6 +128,8 @@ namespace FileShareAndStreamServer__Windows_
                 stopButton.Enabled = true;
 
                 shareButton.Enabled = true;
+
+                browseButton.Enabled = false;
 
                 serverStatusLabel.Text =
                     "Server Running";
@@ -172,27 +180,10 @@ namespace FileShareAndStreamServer__Windows_
 
         private void stopButton_Click(object sender, EventArgs e)
         {
-            if (serverProcess != null && !serverProcess.HasExited)
-            {
-                serverProcess.Kill();
-
-                serverProcess.Dispose();
-
-                serverProcess = null;
-
-                submitButton.Enabled = true;
-
-                stopButton.Enabled = false;
-
-                portTextBox.ReadOnly = false;
-
-                ipLabel.Text = "IP Address: ";
-
-                portLabel.Text = "Port: ";
-
-                shareButton.Enabled = false;
-            }
+            StopServer();
         }
+
+
 
         private void shareButton_Click(object sender, EventArgs e)
         {
@@ -220,6 +211,79 @@ namespace FileShareAndStreamServer__Windows_
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information
             );
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(serverProcess != null && !serverProcess.HasExited) 
+            { 
+                serverProcess.Kill();
+                serverProcess.Dispose();
+                serverProcess = null;
+            }
+        }
+
+        private void ServerProcess_Exited(object? sender, EventArgs e)
+        {
+            BeginInvoke(() =>
+            {
+                serverProcess = null;
+
+                submitButton.Enabled = true;
+
+                stopButton.Enabled = false;
+
+                portTextBox.ReadOnly = false;
+
+                ipLabel.Text = "IP Address: ";
+
+                portLabel.Text = "Port: ";
+
+                shareButton.Enabled = false;
+
+                browseButton.Enabled = true;
+
+                serverStatusLabel.Text =
+                    "Server Stopped";
+
+                serverStatusLabel.ForeColor =
+                    Color.Red;
+            });
+        }
+
+        private void StopServer()
+        {
+            if (serverProcess != null)
+            {
+                if (!serverProcess.HasExited)
+                {
+                    serverProcess.Kill();
+                }
+
+                serverProcess.Dispose();
+
+                serverProcess = null;
+            }
+
+            submitButton.Enabled = true;
+
+            stopButton.Enabled = false;
+
+            portTextBox.ReadOnly = false;
+
+            ipLabel.Text = "IP Address: ";
+
+            portLabel.Text = "Port: ";
+
+            shareButton.Enabled = false;
+
+            browseButton.Enabled = true;
+
+            serverStatusLabel.Text =
+                "Server Stopped";
+
+            serverStatusLabel.ForeColor =
+                Color.Red;
         }
     }
 }
